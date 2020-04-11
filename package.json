@@ -20,5 +20,10 @@
   "bugs": {
     "url": "https://github.com/HU33LE/Alnilam/issues"
   },
-  "homepage": "https://github.com/HU33LE/Alnilam#readme"
+  "homepage": "https://github.com/HU33LE/Alnilam#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "mariadb": "^2.3.1",
+    "sequelize": "^5.21.6"
+  }
 }
