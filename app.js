@@ -8,7 +8,7 @@ const database = require ('./database/mariadb');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 
-const mainController = require('./controllers/main.controller');
+const mainController = require('./controllers/mainController');
 
 app.use(mainController);
 

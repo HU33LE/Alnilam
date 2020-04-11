@@ -13,7 +13,7 @@ let User = class User {
         this._apiToken = undefined;
 
 		if(args) {
-			for(key of args) {
+			for(let key in args) {
 				this[`_${key}`] = args[key];
 			}
 		}
@@ -22,8 +22,7 @@ let User = class User {
     hashPassword (password){
         let passwordToken = this._passwordToken;
         let hashable = passwordToken.substr(0,32)+ password + passwordToken.substr(32);
-        let hash = crypto.createHash('sha256').update(hashable).digest('hex');
-
+        let hash = crypto.SHA256(hashable).toString();
         return hash;
     }
 
@@ -111,10 +110,6 @@ let User = class User {
     get apiToken (){
         return this._apiToken;
     }
-
-
-
-    
-    
-
 }
+
+module.exports = User;
