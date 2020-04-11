@@ -1,22 +1,16 @@
-const database = ('../Database/mariadb.js');
+const database = ('../Database/Models');
 
-let User = database.define('user', {
-    firstName: {
-        type: Sequelize.STRING(100),
-		allowNull: false
-    },
-    lastName: {
-        type: Sequelize.STRING(100),
-		allowNull: false
-    },
-    email: {
-        type: Sequelize.STRING(100),
-        allowNull: false,
-        unique: true
-    },
-    password: {
-        type: Sequelize.STRING(100),
-		allowNull: false
-    }
-});
-module.exports.user = User;
+let User = class User {
+	constructor(args) {
+		this._id = undefined;
+		this._firstName = undefined;
+		this._lastName = undefined;
+		this._password = undefined;
+
+		if(args) {
+			for(key of args) {
+				this[`_${key}`] = args[key];
+			}
+		}
+	}
+}
