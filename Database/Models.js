@@ -21,6 +21,15 @@ let User = database.define('user', {
     password: {
         type: Sequelize.STRING(64),
 		allowNull: false
+    },
+    passwordToken : {
+        type: Sequelize.STRING(64),
+		allowNull: false
+    },
+    apiToken : {
+        type: Sequelize.STRING(64),
+        allowNull: true,
+        unique: true
     }
 });
 
