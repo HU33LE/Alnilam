@@ -1,0 +1,24 @@
+{
+  "name": "core",
+  "version": "1.0.0",
+  "description": "Main core for management system",
+  "main": "App.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HU33LE/Alnilam.git"
+  },
+  "keywords": [
+    "management",
+    "system",
+    "core"
+  ],
+  "author": "Hu33le",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/HU33LE/Alnilam/issues"
+  },
+  "homepage": "https://github.com/HU33LE/Alnilam#readme"
+}
