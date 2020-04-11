@@ -11,5 +11,13 @@ let create = (req,res) => {
     //Validate data input here
 
     user.firstName = user.firstName.trim().toLowerCase();
+    user.lastName = user.lastName.trim().toLowerCase();
+    user.email = user.email.trim().toLowerCase();
+
+    models.User.create(user).then(row => {
+        res.send(row);
+    });
 
 };
+
+module.exports.create = create;

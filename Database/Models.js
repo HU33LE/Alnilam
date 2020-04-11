@@ -1,4 +1,5 @@
 const database = require ('./mariadb');
+const Sequelize = require('sequelize');
 
 // ----------------- Declaration of models -----------------
 
@@ -29,6 +30,7 @@ module.exports.User = User;
 
 module.exports.User.sync({force: false}).then(()=>{
 	console.log('Table User syncronized');
-}).catch(()=>{
-	console.error("Oops... Couldn't sync User's table");
+}).catch((err)=>{
+    console.error("Oops... Couldn't sync User's table");
+    console.log(err);
 });

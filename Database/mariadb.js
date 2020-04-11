@@ -1,8 +1,7 @@
-
 const Sequelize = require('sequelize');
 
 // Database configuration
-module.export.database = new Sequelize('ucodbspr_orions_belt', 'ucodbspr_orions_belt_user', 'r(pi2U2IasWp', {
+module.exports = new Sequelize('ucodbspr_orions_belt', 'ucodbspr_orions_belt_user', 'r(pi2U2IasWp', {
 	host: '199.188.201.88',
 	port: '3306',
 	dialect: 'mysql',
@@ -13,7 +12,7 @@ module.export.database = new Sequelize('ucodbspr_orions_belt', 'ucodbspr_orions_
 		acquire: 30000,
 		idle: 10000
 	},
-	logging: false
 });
+
 
 
