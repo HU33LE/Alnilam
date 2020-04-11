@@ -1,6 +1,6 @@
-const database = require ('../Database/Models');
+const database = require ('../database/models');
 const crypto = require ('crypto-js');
-const stringHelper = require('../Helpers/stringHelper');
+const stringHelper = require('../helpers/stringHelper');
 
 let User = class User {
 	constructor(args = {}) {
