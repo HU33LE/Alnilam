@@ -1,8 +1,9 @@
 const database = require ('../database/models');
+const { Model } = require('sequelize');
 const crypto = require ('crypto-js');
 const stringHelper = require('../helpers/stringHelper');
 
-let User = class User {
+let User = class User extends Model {
 	constructor(args = {}) {
 		this._id = undefined;
 		this._firstName = undefined;

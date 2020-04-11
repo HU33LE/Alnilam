@@ -39,6 +39,17 @@ let create = (req,res) => {
     });
 };
 
+let index = (req,res) => {
+    let users = User.findAll({
+        attributes: ['*']
+    }).then( (users) => {
+        res.json(users);
+    }).catch((err) => {
+        console.error(err);
+        res.status(500);
 
+    });
+}
 
 module.exports.create = create;
+module.exports.index = index;
