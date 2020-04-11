@@ -12,6 +12,7 @@ module.exports = new Sequelize('alnilam', 'alnilam', '12345678', {
 		acquire: 30000,
 		idle: 10000
 	},
+	logging: false
 });
 
 

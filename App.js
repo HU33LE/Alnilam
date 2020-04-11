@@ -1,18 +1,31 @@
 const express = require('express');
-const bodyParser = require('body-parser');
-const usersController = require('./Controllers/UsersController');
-const { check } = require('express-validator');
-const app = express();
-
 const __PORT = 3000;
+const bodyParser = require('body-parser');
+const app = express();
+const database = require ('./Database/mariadb');
 
 // --------------- DECLARATION OF MIDDLEWARE -------------
-app.use(express.json());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 
-app.post('/users/new',[check('firstName').notEmpty()],(usersController.create));
+const mainController = require('./Controllers/main.controller');
+
+app.use(mainController);
+
+database.authenticate()
+  .then(() => {
+    console.log(
+      "Database is connected [\x1b[32m%s\x1b[0m ]",
+      " ONLINE"
+    );
+  }
+  ).catch( 
+    err => console.log(err)
+);
 
 app.listen(__PORT, function () {
-  console.log('app listening on port 3000!');
+  console.log(
+    "Server is running on port " + __PORT + " [\x1b[32m%s\x1b[0m ]",
+    " ONLINE"
+  );
 });
