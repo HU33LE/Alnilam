@@ -18,7 +18,7 @@ let User = class User {
 				this[`_${key}`] = args[key];
 			}
 		}
-    }
+	}
 
     hashPassword (password){
         let passwordToken = this._passwordToken;
@@ -125,6 +125,42 @@ User.findAll = (obj = {}) => {
 			});
 
 			res(users);
+		}).catch( err => {
+			rej(err);
+		})
+	});
+};
+
+/**
+ * Emulate Sequelize.findOne method, but returning
+ * instances of User instead of raw database info
+ */
+User.findOne = (obj = {}) => {
+	return new Promise( (res, rej) => {
+		database.User.findOne(obj).then( rawUser => {
+			if(!rawUser) 
+				res(null);
+
+			let user = new User(rawUser.dataValues);
+			res(user);
+		}).catch( err => {
+			rej(err);
+		})
+	});
+};
+
+/**
+ * Emulate Sequelize.findOne method, but returning
+ * instances of User instead of raw database info
+ */
+User.findById = (id) => {
+	return new Promise( (res, rej) => {
+		database.User.findByPk(id).then( rawUser => {
+			if(!rawUser) 
+				res(null);
+
+			let user = new User(rawUser.dataValues);
+			res(user);
 		}).catch( err => {
 			rej(err);
 		})
