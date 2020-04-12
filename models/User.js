@@ -3,7 +3,7 @@ const { Model } = require('sequelize');
 const crypto = require ('crypto-js');
 const stringHelper = require('../helpers/stringHelper');
 
-let User = class User extends Model {
+let User = class User {
 	constructor(args = {}) {
 		this._id = undefined;
 		this._firstName = undefined;
@@ -112,5 +112,23 @@ let User = class User extends Model {
         return this._apiToken;
     }
 }
+
+/** 
+ * Emulate Sequelize.findAll method, but returning
+ * instances of User instead of raw database info
+ */
+User.findAll = (obj = {}) => {
+	return new Promise( (res, rej) => {
+		database.User.findAll(obj).then( rawUsers => {
+			let users = rawUsers.map( rawUser => {
+				return new User(rawUser.dataValues);
+			});
+
+			res(users);
+		}).catch( err => {
+			rej(err);
+		})
+	});
+};
 
 module.exports = User;

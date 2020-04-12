@@ -1,4 +1,5 @@
-const User = require('../models/User'); 
+const User = require('../models/User');
+const database = require('../database/models')
 const { check, validationResult } = require('express-validator');
 
 let create = (req,res) => {
@@ -40,15 +41,22 @@ let create = (req,res) => {
 };
 
 let index = (req,res) => {
-    let users = User.findAll({
-        attributes: ['*']
-    }).then( (users) => {
-        res.json(users);
-    }).catch((err) => {
-        console.error(err);
-        res.status(500);
+	/* database.User.findAll({}).then( users => {
+		res.json(users);
+	}).catch( err => {
+		res.json(err);
+	}) */
 
-    });
+	User.findAll().then(users => {
+		let result = users.map( user => user.toJson());
+
+		res.json(result);
+	}).catch( err => {
+		console.error(err);
+		res.status(500).json({
+			msg: "An error has occurred"
+		});
+	})
 }
 
 module.exports.create = create;
