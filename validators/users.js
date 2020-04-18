@@ -30,3 +30,13 @@ module.exports.putUserPassword = [
 	check('newPasswordConfirmation').notEmpty().withMessage('newPasswordConfirmation field cant be empty'),
 	check('newPasswordConfirmation').isLength({ min: 6 }).withMessage('newPasswordConfirmation field minimun length is 6'),
 ];
+
+module.exports.putUserPassword = [
+	check('password').notEmpty().withMessage('password field cant be empty'),
+	check('password').isLength({ min: 6 }).withMessage('password field minimun length is 6'),
+	check('newPassword').notEmpty().withMessage('newPassword field cant be empty'),
+	check('newPassword').isLength({ min: 6 }).withMessage('newPassword field minimun length is 6'),
+	check('newPasswordConfirmation').notEmpty().withMessage('newPasswordConfirmation field cant be empty'),
+	check('newPasswordConfirmation').isLength({ min: 6 }).withMessage('newPasswordConfirmation field minimun length is 6'),
+];
+

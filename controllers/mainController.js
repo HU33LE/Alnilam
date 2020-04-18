@@ -10,6 +10,7 @@ app.post('/register', usersValidator.postNewUser, usersController.create);
 app.get('/users', usersController.index);
 app.get('/users/:id', usersValidator.getUser, usersController.show);
 app.put('/users/:id', usersValidator.putUser, usersController.update);
+app.delete('/users/:id', usersController.deleteUser);
 
 // ------------------------ End Of Users routes ------------------------
 
