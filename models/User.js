@@ -59,6 +59,31 @@ let User = class User {
         });
     };
 
+    destroy (){
+        return new Promise((res,rej) => {
+            if(this._id === undefined){
+                err = new Error('No user to delete');
+                rej(err);
+            } else {
+                //Delete User
+                
+                database.User.findOne({
+                    where: {
+                        id: this._id
+                    }
+                }).then(user => {
+                    user.destroy().then(row =>{
+                        res(this);
+                    }).catch(err => {
+                        rej(err);
+                    });
+                }).catch(err => {
+                    rej(err);
+                });
+            }
+        });
+    }
+
     toJson(inner = false){
         let json = {
             id: this._id,

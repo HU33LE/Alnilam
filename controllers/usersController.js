@@ -160,23 +160,20 @@ let deleteUser = (req, res) => {
     let = userId = req.params.id;
 
     User.findById(userId).then( user => {
-        if(user === null)
+		if(user === null)
 			return res.status(400).json({
 				msg: `Not user found with id [${userId}]`
-            });
-            
-        user.destroy().then( user => {
-            res.status(204)
+            });  
+
+        user.destroy(userId).then( user => {
+            res.status(204).json(user.toJson());
         }).catch(err => {
             console.error(err);
             res.status(500).json({
                 msg: 'An error has occurred'
             });
         });
-    }).catch( err =>{
-    
     });
-   
 }
 
 module.exports.create = create;
