@@ -90,7 +90,7 @@ let changePassword = (req, res) => {
 	// TODO orange todo jeje 
 	// --------- End of the code about the comment ---------
 
-	// Continue here tomorrow c: <- ? Tavo
+	// Continue here tomorrow c: <- ? No you
 
 
 }
