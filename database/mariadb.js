@@ -1,9 +1,9 @@
 const Sequelize = require('sequelize');
 
 // Database configuration
-module.exports = new Sequelize('alnilam', 'alnilam', '12345678', {
-	host: 'db4free.net',
-	port: '3306',
+module.exports = new Sequelize('ucodbspr_alnilam', 'ucodbspr_miniaikon', 'Laravel#5', {
+	host: 'localhost',
+	port: '3307',
 	dialect: 'mysql',
 	operatorAliases: false,
 	pool: {

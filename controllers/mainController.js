@@ -17,6 +17,10 @@ app.delete('/users/:id', usersController.deleteUser);
 // ------------------------ End Of Users routes ------------------------
 // ------------------------ Assets routes ------------------------
 app.post('/assets/new', assetsValidator.postNewAsset, assetsController.create);
+app.get('/assets', assetsController.index);
+app.get('/assets/:id', assetsValidator.getAsset, assetsController.show);
+app.put('/assets/:id', assetsValidator.putAsset, assetsController.update);
+app.delete('/assets/:id', assetsController.deleteAsset);
 // ------------------------ End Of Assets routes ------------------------
 
 

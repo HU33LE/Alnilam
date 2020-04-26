@@ -52,6 +52,31 @@ let Asset =  class Asset{
         });
     };
 
+    destroy (){
+        return new Promise((res,rej) => {
+            if(this._id === undefined){
+                err = new Error('No asset to delete');
+                rej(err);
+            } else {
+                //Delete Asset
+                
+                database.Asset.findOne({
+                    where: {
+                        id: this._id
+                    }
+                }).then(asset => {
+                    asset.destroy().then(row =>{
+                        res(this);
+                    }).catch(err => {
+                        rej(err);
+                    });
+                }).catch(err => {
+                    rej(err);
+                });
+            }
+        });
+    }
+
     toJson(inner = false){
         let json = {
             id: this._id,
