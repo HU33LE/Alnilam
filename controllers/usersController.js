@@ -1,48 +1,8 @@
 const User = require('../models/User');
 const { validationResult } = require('express-validator');
 
-let create = (req,res) => {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
-    }
-
-    let attrs = {
-        email: req.body.email,
-        firstName: req.body.firstName,
-        lastName: req.body.lastName
-    };
-
-    let user = new User(attrs);
-
-    user.password = req.body.password;
-
-    user.save().then( (_user) => {
-        res.status(201).json(_user.toJson());
-    }).catch( (err) => {
-        const error = err.original;
-        if(error.errno === 1062){
-            res.status(409).json({
-				error: 'Email is already taken'
-            });
-            return;
-        } else {
-            console.error(error.sqlMessage);
-            res.status(500).json({
-				error: 'An error has ocurred'
-            });
-            return;
-        }
-    });
-};
 
 let index = (req,res) => {
-	/* database.User.findAll({}).then( users => {
-		res.json(users);
-	}).catch( err => {
-		res.json(err);
-	}) */
 
 	User.findAll().then(users => {
 		let result = users.map( user => user.toJson());
@@ -57,12 +17,7 @@ let index = (req,res) => {
 }
 
 let show = (req, res) => {
-	const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
-    }
-
+	
 	let userId = req.params.id;
 
 	User.findById(userId).then(user => {
@@ -82,11 +37,6 @@ let show = (req, res) => {
 }
 
 let update = (req, res) => {
-	const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
-	}
 	
 	let userId = req.params.id;
 
@@ -132,18 +82,15 @@ let update = (req, res) => {
 }
 
 let changePassword = (req, res) => {
-	/**
-	 * The next code until mark should be moved to a middleware
-	 * to avoid duplicating code without needing it
-	 */
-	const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
-	}
+	
+	// TODO use a middleware here
+	// ? wtf
+	// ! unsecure
+	// * cute code
+	// TODO orange todo jeje 
 	// --------- End of the code about the comment ---------
 
-	// Continue here tomorrow c: 
+	// Continue here tomorrow c: <- ? No you
 
 
 }
@@ -175,7 +122,7 @@ let deleteUser = (req, res) => {
     });
 }
 
-module.exports.create = create;
+
 module.exports.index = index;
 module.exports.show = show;
 module.exports.update = update;

@@ -1,5 +1,4 @@
 const database = require ('../database/models');
-const { Model } = require('sequelize');
 const crypto = require ('crypto-js');
 const stringHelper = require('../helpers/stringHelper');
 
@@ -11,7 +10,8 @@ let User = class User {
         this._email = undefined;
         this._password = undefined;
         this._passwordToken = stringHelper.random(64);
-        this._apiToken = undefined;
+		this._apiToken = undefined;
+		this._modelCache = undefined;
 
 		if(args) {
 			for(let key in args) {
@@ -33,28 +33,39 @@ let User = class User {
                 //Create in DataBase
                 let user = this.toJson(true);
                 database.User.create(user).then(row => {
-                    this._id = row.id; 
+					this._id = row.id; 
+					this._modelCache = row;
                     res(this);
                 }).catch((err) => {
                     rej(err);
                 });
             } else {
                 //Update in DataBase
-                let user = this.toJson(true);
-                
-                database.User.findOne({
-                    where: {
-                        id: this._id
-                    }
-                }).then(_user => {
-                    _user.update(user).then(row =>{
+				let user = this.toJson(true);
+				
+				if(this._modelCache !== undefined) {
+					this._modelCache.update(user).then(row =>{
+						this._modelCache = row;
                         res(this);
                     }).catch(err => {
                         rej(err);
                     });
-                }).catch(err => {
-                    rej(err);
-                });
+				} else {
+					database.User.findOne({
+						where: {
+							id: this._id
+						}
+					}).then(_user => {
+						_user.update(user).then(row =>{
+							this._modelCache = row;
+							res(this);
+						}).catch(err => {
+							rej(err);
+						});
+					}).catch(err => {
+						rej(err);
+					});
+				}
             }
         });
     };
@@ -89,16 +100,26 @@ let User = class User {
             id: this._id,
             firstName: this._firstName,
             lastName: this._lastName,
-            email: this._email
+            email: this._email,
+            token: this._apiToken
         };
 
         if(inner){
             json.password = this._password;
             json.passwordToken = this._passwordToken;
-            json.apiToken = this._apiToken;
         }
 
         return json;
+    }
+
+    /**
+     * @description this function checks if the given password is equal to the user hashed passowrd
+     * @param {string} password request password
+     * @returns {bool}
+     */
+    isPasswordValid(password){
+        const hash = this.hashPassword(password);
+        return hash === this._password;
     }
 
     set firstName (_firstName){
@@ -136,6 +157,10 @@ let User = class User {
     get apiToken (){
         return this._apiToken;
     }
+
+    set apiToken (token){
+        this._apiToken = token;
+    }
 }
 
 /** 
@@ -146,13 +171,14 @@ User.findAll = (obj = {}) => {
 	return new Promise( (res, rej) => {
 		database.User.findAll(obj).then( rawUsers => {
 			let users = rawUsers.map( rawUser => {
+				rawUsers.dataValues.modelCache = rawUser;
 				return new User(rawUser.dataValues);
 			});
 
 			res(users);
 		}).catch( err => {
 			rej(err);
-		})
+		});
 	});
 };
 
@@ -165,12 +191,12 @@ User.findOne = (obj = {}) => {
 		database.User.findOne(obj).then( rawUser => {
 			if(!rawUser) 
 				res(null);
-
+			rawUser.dataValues.modelCache = rawUser;
 			let user = new User(rawUser.dataValues);
 			res(user);
 		}).catch( err => {
 			rej(err);
-		})
+		});
 	});
 };
 
@@ -184,11 +210,37 @@ User.findById = (id) => {
 			if(!rawUser) 
 				res(null);
 
+			rawUser.dataValues.modelCache = rawUser;
 			let user = new User(rawUser.dataValues);
 			res(user);
 		}).catch( err => {
 			rej(err);
-		})
+		});
+	});
+};
+
+/**
+ * Emulate Sequelize.findOne method with email where condition, but returning
+ * an instance of User instead 
+ */
+User.findByEmail = (email) => {
+	return new Promise( (res, rej) => {
+		database.User.findOne({
+            where: {
+                email: email
+            }
+        }).then( rawUser => {
+			if(!rawUser) 
+				res(null);
+
+			rawUser.dataValues.modelCache = rawUser;
+            let user = new User(rawUser.dataValues);
+            
+
+			res(user);
+		}).catch( err => {
+			rej(err);
+		});
 	});
 };
 
