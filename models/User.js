@@ -10,7 +10,8 @@ let User = class User {
         this._email = undefined;
         this._password = undefined;
         this._passwordToken = stringHelper.random(64);
-        this._apiToken = undefined;
+		this._apiToken = undefined;
+		this._modelCache = undefined;
 
 		if(args) {
 			for(let key in args) {
@@ -32,28 +33,39 @@ let User = class User {
                 //Create in DataBase
                 let user = this.toJson(true);
                 database.User.create(user).then(row => {
-                    this._id = row.id; 
+					this._id = row.id; 
+					this._modelCache = row;
                     res(this);
                 }).catch((err) => {
                     rej(err);
                 });
             } else {
                 //Update in DataBase
-                let user = this.toJson(true);
-                
-                database.User.findOne({
-                    where: {
-                        id: this._id
-                    }
-                }).then(_user => {
-                    _user.update(user).then(row =>{
+				let user = this.toJson(true);
+				
+				if(this._modelCache !== undefined) {
+					this._modelCache.update(user).then(row =>{
+						this._modelCache = row;
                         res(this);
                     }).catch(err => {
                         rej(err);
                     });
-                }).catch(err => {
-                    rej(err);
-                });
+				} else {
+					database.User.findOne({
+						where: {
+							id: this._id
+						}
+					}).then(_user => {
+						_user.update(user).then(row =>{
+							this._modelCache = row;
+							res(this);
+						}).catch(err => {
+							rej(err);
+						});
+					}).catch(err => {
+						rej(err);
+					});
+				}
             }
         });
     };
@@ -151,8 +163,6 @@ let User = class User {
     }
 }
 
-
-
 /** 
  * Emulate Sequelize.findAll method, but returning
  * instances of User instead of raw database info
@@ -161,6 +171,7 @@ User.findAll = (obj = {}) => {
 	return new Promise( (res, rej) => {
 		database.User.findAll(obj).then( rawUsers => {
 			let users = rawUsers.map( rawUser => {
+				rawUsers.dataValues.modelCache = rawUser;
 				return new User(rawUser.dataValues);
 			});
 
@@ -180,7 +191,7 @@ User.findOne = (obj = {}) => {
 		database.User.findOne(obj).then( rawUser => {
 			if(!rawUser) 
 				res(null);
-
+			rawUser.dataValues.modelCache = rawUser;
 			let user = new User(rawUser.dataValues);
 			res(user);
 		}).catch( err => {
@@ -199,6 +210,7 @@ User.findById = (id) => {
 			if(!rawUser) 
 				res(null);
 
+			rawUser.dataValues.modelCache = rawUser;
 			let user = new User(rawUser.dataValues);
 			res(user);
 		}).catch( err => {
@@ -221,6 +233,7 @@ User.findByEmail = (email) => {
 			if(!rawUser) 
 				res(null);
 
+			rawUser.dataValues.modelCache = rawUser;
             let user = new User(rawUser.dataValues);
             
 
@@ -230,6 +243,5 @@ User.findByEmail = (email) => {
 		});
 	});
 };
-
 
 module.exports = User;
