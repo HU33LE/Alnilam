@@ -33,13 +33,36 @@ let User = database.define('user', {
     }
 });
 
+let Asset = database.define('asset', {
+    name: {
+        type: Sequelize.STRING(100),
+        allowNull: false
+    },
+    description: {
+        type: Sequelize.TEXT('long'),
+        allowNull: true
+    },
+    collectionHash: {
+        type: Sequelize.STRING(64),
+        allowNull: false,
+        unique: true
+    }
+});
+
+// ----------------- Declaration of relationships -----------------
+Asset.belongsTo(User);
+
+module.exports.Asset = Asset;
 module.exports.User = User;
 
-// ------------------ Sync Models with Database -----------------
+User.sync({alter: true}).then(() => {
+    console.log("User table synchronized successfully");
+}).catch(err => {
+    console.error(err);
+});
 
-module.exports.User.sync({force: false}).then(()=>{
-	console.log('Table User syncronized');
-}).catch((err)=>{
-    console.error("Oops... Couldn't sync User's table");
-    console.log(err);
+Asset.sync({alter: true}).then(() => {
+    console.log("Asset table synchronized successfully");
+}).catch(err => {
+    console.error(err);
 });
