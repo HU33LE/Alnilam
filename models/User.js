@@ -118,7 +118,10 @@ let User = class User {
      * @returns {bool}
      */
     isPasswordValid(password){
+        console.log('received', password);
+        
         const hash = this.hashPassword(password);
+        console.log('hash', hash);
         return hash === this._password;
     }
 

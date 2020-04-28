@@ -14,7 +14,7 @@ let User = database.define('user', {
 		allowNull: false
     },
     email: {
-        type: Sequelize.STRING(100),
+        type: Sequelize.STRING(64),
         allowNull: false,
         unique: true
     },
@@ -55,7 +55,7 @@ Asset.belongsTo(User);
 module.exports.Asset = Asset;
 module.exports.User = User;
 
-User.sync({alter: true}).then(() => {
+User.sync({alter: false, force: false}).then(() => {
     console.log("User table synchronized successfully");
 }).catch(err => {
     console.error(err);

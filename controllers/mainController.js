@@ -8,6 +8,9 @@ const assetsValidator = require('../validators/assets');
 const authController = require('./authController');
 
 
+console.log('maincontroller----');
+
+
 // middlewares
 const validateErrorMw = require('../middlewares/user.middleware').validateErrors;
 

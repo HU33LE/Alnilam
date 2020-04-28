@@ -42,6 +42,9 @@ let register = (req,res) => {
 };
 
 let login = (req,res) => {
+
+    console.log('---Login---');
+    
     const body = req.body;
 
     const email = body.email;
@@ -49,39 +52,30 @@ let login = (req,res) => {
 
     User.findByEmail(email).then(user => {
         
+        if(!user){
+            return res.status(401).json({
+                message: "Invalid credentials"
+            });
+        }
+
         if(!user.isPasswordValid(password)){
             return res.status(401).json({
                 message: "Invalid credentials"
             });
         }
+        
         const token = jwt.sign({ user: user.toJson() } , SEED, {expiresIn: tokenExpiration});
 
         user.apiToken = token;
 
-        user.save();
+        return res.status(200).json(user.toJson());
 
-        res.status(200).json({
-            user: user
-        });
-
-        
+    
     }).catch(err => {
-        return res.status(401).json({
+        return res.status(500).json({
             error: err
         });
     });
-
-    
-    // leer base datos con usuario
-
-    // validar que la contraseña en body = basedatos
-
-    // if valid
-
-    //    token = user.getToken()
-
-    //    return token
-
 
 };
 
